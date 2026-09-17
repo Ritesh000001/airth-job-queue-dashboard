@@ -32,8 +32,8 @@ async function request<T>(
     throw new Error(message);
   }
 
-  if (response.status === 204) {
-    return undefined as T;
+  if (response.status === 204 || response.status === 200) {
+  return undefined as T;
   }
 
   return response.json();
@@ -53,7 +53,8 @@ export const updateJobStatus = (id: string, status: JobStatus) =>
     body: JSON.stringify({ status }),
   });
 
-export const deleteJob = (id: string) =>
-  request<void>(`/jobs/${id}`, {
+export const deleteJob = async (id: string): Promise<void> => {
+  await request<void>(`/jobs/${id}`, {
     method: 'DELETE',
   });
+};
