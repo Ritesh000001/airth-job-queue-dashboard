@@ -32,11 +32,17 @@ async function request<T>(
     throw new Error(message);
   }
 
-  if (response.status === 204 || response.status === 200) {
-  return undefined as T;
+  if (response.status === 204) {
+    return undefined as T;
   }
 
-  return response.json();
+   const text = await response.text();
+
+   if (!text) {
+     return undefined as T;
+   }
+
+    return JSON.parse(text) as T;
 }
 
 export const getJobs = () => request<Job[]>('/jobs');
